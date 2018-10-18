@@ -1,0 +1,79 @@
+#Tomcat config
+server:
+    tomcat:
+        max-threads: 10
+        min-spare-threads: 10
+    port: 547
+#spring config
+spring:
+    profiles:
+      active: pro
+---
+#开发环境 profile
+spring:
+    profiles: dev
+    datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/lunxian-gen?useUnicode=true&characterEncoding=UTF-8
+      username: root
+      password: 1234
+      filters: log4j,wall,mergeStat
+    jackson:
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+    resources:
+      static-locations: classpath:/static/,classpath:/views/
+    mvc:
+      view:
+        suffix: .html
+        prefix: classpath:/views/
+logging:
+  level.root: info
+  level.org.springframework: debug
+  level.org.apache.ibatis: debug
+  #path: /logs/gen/
+  file: log/gen.log
+---
+#正式环境 profile
+spring:
+    profiles: pro
+    datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/gen?useUnicode=true&characterEncoding=UTF-8
+      username: root
+      password: 123.
+      filters: log4j,wall,mergeStat
+    jackson:
+      time-zone: GMT+8
+      date-format: yyyy-MM-dd HH:mm:ss
+    resources:
+      static-locations: classpath:/static/,classpath:/views/
+    mvc:
+      view:
+        suffix: .html
+        prefix: classpath:/views/
+logging:
+  level.root: warn
+  #path: /logs/gen/
+  file: log/gen.log
+---
+#mybaits-plus config
+mybatis-plus:
+  mapper-locations: classpath:mapper/**/*.xml
+  typeAliasesPackage: com.lunxian.modules.*.entity
+  global-config:
+      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 3
+      #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 0
+      #驼峰下划线转换
+    db-column-underline: true
+      #刷新mapper 调试神器
+    refresh-mapper: true
+      #数据库大写下划线转换
+      #capital-mode: true
+    configuration:
+      map-underscore-to-camel-case: true
+      cache-enabled: true

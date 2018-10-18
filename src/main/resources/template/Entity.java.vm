@@ -1,0 +1,66 @@
+package ${package}.${moduleName}.entity;
+
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.enums.IdType;
+import com.baomidou.mybatisplus.activerecord.Model;
+
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @email ${email}
+ * @date ${datetime}
+ */
+@TableName("${tableName}")
+public class ${className}Entity extends Model<${className}Entity>  {
+     private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+	/**
+	 * $column.comments
+	 */
+	#if($column.columnName == $pk.columnName)
+@TableId(value="${column.columnName}", type= IdType.AUTO)
+	#else
+@TableField("${column.columnName}")
+	#end
+private $column.attrType $column.attrname;
+#end
+
+#foreach ($column in $columns)
+
+	public void set${column.attrName}($column.attrType $column.attrname) {
+		this.$column.attrname = $column.attrname;
+	}
+
+	public $column.attrType get${column.attrName}() {
+		return $column.attrname;
+	}
+#end
+
+     @Override
+     protected Serializable pkVal() {
+              return this.id;
+     }
+
+     @Override
+     public String toString() {
+      return "${tableName}{" +
+	 #foreach($column in $columns)
+		#if($!{velocityCount}==1)
+ "${column.attrname}=" + ${column.attrname} +
+		#else
+", ${column.attrname}=" + ${column.attrname} +
+	    #end
+	 #end
+     "}";
+     }
+}

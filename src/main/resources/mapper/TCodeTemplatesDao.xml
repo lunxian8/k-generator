@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lunxian.modules.tCodeTemplates.dao.TCodeTemplatesDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lunxian.modules.tCodeTemplates.entity.TCodeTemplatesEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="content" column="content"/>
+        <result property="fileName" column="file_name"/>
+        <result property="groupId" column="group_id"/>
+        <result property="fileType" column="file_type"/>
+        <result property="crtTime" column="crt_time"/>
+        <result property="mdfTime" column="mdf_time"/>
+        <result property="sort" column="sort"/>
+        <result property="remarks" column="remarks"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="savaPackage" column="sava_package"></result>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                    s.id,
+                    s.name,
+                    s.content,
+                    s.file_name AS fileName,
+                    s.group_id AS groupId,
+                    s.file_type AS fileType,
+                    s.crt_time AS crtTime,
+                    s.mdf_time AS mdfTime,
+                    s.sort,
+                    s.remarks,
+                    s.del_flag AS delFlag,
+                    g.name AS tempName,
+                    s.sava_package AS savaPackage
+            </sql>
+
+    <sql id="Base_Table_Joins">
+        left join t_code_template_group g on g.id=s.group_id
+    </sql>
+
+
+    <select id="queryList" resultType="map">
+        SELECT <include refid="Base_Column_List"/> FROM t_code_templates s
+        <include refid="Base_Table_Joins"/>
+        WHERE s.del_flag ='0' <choose>
+        <when test="sidx!=null and sidx!=''">
+            order by ${sidx} ${order}
+        </when>
+        <otherwise>
+            order by mdfTime desc
+        </otherwise>
+    </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getDbInfo" resultType="com.lunxian.modules.tCodeTemplates.entity.TCodeTemplatesEntity">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_code_templates s <include refid="Base_Table_Joins"/>
+        <where>
+        s.del_flag ='0'
+        <if test="id != null">
+            and s.id=#{id}
+        </if>
+        <if test="groupId != null and groupId != ''">
+            and s.group_id=#{groupId}
+        </if>
+    </where> order by s.mdf_time desc
+    </select>
+
+    <select id="getInfo" resultType="com.lunxian.modules.tCodeTemplates.entity.TCodeTemplatesEntity">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_code_templates s <include refid="Base_Table_Joins"/>
+        <where>
+            s.del_flag ='0' and s.id=#{id}
+        </where>
+
+    </select>
+
+
+    <!--新增-->
+    <insert id="save">
+        INSERT into t_code_templates (name,content,file_name,group_id,file_type,crt_time,mdf_time,remarks,sava_package)
+        VALUE (#{name},#{content},#{fileName},#{groupId},#{fileType},now(),now(),#{remarks},#{savaPackage})
+    </insert>
+
+
+    <delete id="update">
+        UPDATE t_code_templates
+        SET name=#{name},content=#{content},
+         file_name=#{fileName},group_id=#{groupId},
+          file_type=#{fileType},remarks=#{remarks},mdf_time=now(),sava_package=#{savaPackage} WHERE id=#{id}
+    </delete>
+
+    <!--<delete id="delect">-->
+        <!--DELETE FROM t_code_templates WHERE id=#{id}-->
+    <!--</delete>-->
+
+    <update id="delect">
+        UPDATE t_code_templates SET del_flag='1' WHERE id=#{id}
+    </update>
+
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from t_code_templates WHERE del_flag ='0'
+        <if test="name != null and name.trim() != ''">
+            and name like concat('%', #{name}, '%')
+        </if>
+    </select>
+</mapper>

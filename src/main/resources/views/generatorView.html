@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>代码生成预览</title>
+    <meta charset="UTF-8">
+    <script src="libs/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="highlight/styles/default.css">
+    <script src="highlight/js/highlight.pack.js"></script>
+    <script>hljs.initHighlightingOnLoad()</script>
+</head>
+<body>
+
+
+<h2>JAVA</h2>
+<pre><code class="java">package com.lunxian.modules.SysCompany.entity;
+
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * @author wang
+ *
+ * @date 2018-05-22 18:02:36
+ */
+@TableName("sys_company")
+public class SysCompanyEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
+	@TableId
+	private String id;
+	/**
+	 *
+	 */
+	private String addr;
+	/**
+	 *
+	 */
+	private String code;
+
+	/**
+	 * 设置：
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getId() {
+		return id;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getAddr() {
+		return addr;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setCode(String code) {
+		this.code = code;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getCode() {
+		return code;
+	}
+}
+</code></pre>
+
+<h2>JAVA Controller</h2>
+<pre><code class="java">
+package com.lunxian.modules.SysCompany.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.lunxian.modules.SysCompany.entity.SysCompanyEntity;
+import com.lunxian.modules.SysCompany.service.SysCompanyService;
+import com.lunxian.common.utils.PageUtils;
+import com.lunxian.common.utils.R;
+
+
+
+/**
+ *
+ *
+ * @author wang
+ *
+ * @date 2018-05-23 09:11:58
+ */
+@RestController
+@RequestMapping("SysCompany/syscompany")
+public class SysCompanyController {
+    @Autowired
+    private SysCompanyService sysCompanyService;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("SysCompany:syscompany:list")
+    public R list(@RequestParam Map&lt;String, Object&gt; params){
+        PageUtils page = sysCompanyService.queryPage(params);
+
+        return R.ok().put("page", page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{id}")
+    @RequiresPermissions("SysCompany:syscompany:info")
+    public R info(@PathVariable("id") String id){
+			SysCompanyEntity sysCompany = sysCompanyService.selectById(id);
+
+        return R.ok().put("sysCompany", sysCompany);
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("SysCompany:syscompany:save")
+    public R save(@RequestBody SysCompanyEntity sysCompany){
+			sysCompanyService.insert(sysCompany);
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("SysCompany:syscompany:update")
+    public R update(@RequestBody SysCompanyEntity sysCompany){
+			sysCompanyService.updateById(sysCompany);
+
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("SysCompany:syscompany:delete")
+    public R delete(@RequestBody String[] ids){
+			sysCompanyService.deleteBatchIds(Arrays.asList(ids));
+
+        return R.ok();
+    }
+
+}
+</code></pre>
+
+
+<h2>SQL</h2>
+<pre><code class="sql">-- 菜单SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`)
+    VALUES ('1', '', 'modules/SysCompany/syscompany.html', NULL, '1', 'fa fa-file-code-o', '6');
+
+-- 按钮父菜单ID
+set @parentId = @@identity;
+
+-- 菜单对应按钮SQL
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`)
+    SELECT @parentId, '查看', null, 'SysCompany:syscompany:list,SysCompany:syscompany:info', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`)
+    SELECT @parentId, '新增', null, 'SysCompany:syscompany:save', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`)
+    SELECT @parentId, '修改', null, 'SysCompany:syscompany:update', '2', null, '6';
+INSERT INTO `sys_menu` (`parent_id`, `name`, `url`, `perms`, `type`, `icon`, `order_num`)
+    SELECT @parentId, '删除', null, 'SysCompany:syscompany:delete', '2', null, '6';
+
+</code></pre>
+
+<h2>XML</h2>
+<pre><code class="XML">
+  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"&gt;
+
+&lt;mapper namespace="com.lunxian.modules.SysCompany.dao.SysCompanyDao"&gt;
+
+	&lt;!-- 可根据自己的需求，是否要使用 --&gt;
+    &lt;resultMap type="com.lunxian.modules.SysCompany.entity.SysCompanyEntity" id="sysCompanyMap"&gt;
+        &lt;result property="id" column="id"/&gt;
+        &lt;result property="addr" column="addr"/&gt;
+        &lt;result property="code" column="code"/&gt;
+    &lt;/resultMap&gt;
+
+
+&lt;/mapper&gt;
+</code></pre>
+
+<h2>HTML</h2>
+<pre><code class="html">
+  &lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;/title&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta http-equiv="X-UA-Compatible" content="IE=edge"&gt;
+    &lt;meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"&gt;
+    &lt;link rel="stylesheet" href="../../css/bootstrap.min.css"&gt;
+    &lt;link rel="stylesheet" href="../../css/font-awesome.min.css"&gt;
+    &lt;link rel="stylesheet" href="../../plugins/jqgrid/ui.jqgrid-bootstrap.css"&gt;
+    &lt;link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css"&gt;
+    &lt;link rel="stylesheet" href="../../css/main.css"&gt;
+    &lt;script src="../../libs/jquery.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../../plugins/layer/layer.js"&gt;&lt;/script&gt;
+    &lt;script src="../../libs/bootstrap.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../../libs/vue.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../../plugins/jqgrid/grid.locale-cn.js"&gt;&lt;/script&gt;
+    &lt;script src="../../plugins/jqgrid/jquery.jqGrid.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../../plugins/ztree/jquery.ztree.all.min.js"&gt;&lt;/script&gt;
+    &lt;script src="../../js/common.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="rrapp" v-cloak&gt;
+    &lt;div v-show="showList"&gt;
+        &lt;div class="grid-btn"&gt;
+            &lt;a v-if="hasPermission('SysCompany:syscompany:save')" class="btn btn-primary" @click="add"&gt;&lt;i class="fa fa-plus"&gt;&lt;/i&gt;&nbsp;新增&lt;/a&gt;
+            &lt;a v-if="hasPermission('SysCompany:syscompany:update')" class="btn btn-primary" @click="update"&gt;&lt;i class="fa fa-pencil-square-o"&gt;&lt;/i&gt;&nbsp;修改&lt;/a&gt;
+            &lt;a v-if="hasPermission('SysCompany:syscompany:delete')" class="btn btn-primary" @click="del"&gt;&lt;i class="fa fa-trash-o"&gt;&lt;/i&gt;&nbsp;删除&lt;/a&gt;
+        &lt;/div&gt;
+        &lt;table id="jqGrid"&gt;&lt;/table&gt;
+        &lt;div id="jqGridPager"&gt;&lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div v-show="!showList" class="panel panel-default"&gt;
+        &lt;div class="panel-heading"&gt;{{title}}&lt;/div&gt;
+        &lt;form class="form-horizontal"&gt;
+                                                                            &lt;div class="form-group"&gt;
+                        &lt;div class="col-sm-2 control-label"&gt;&lt;/div&gt;
+                        &lt;div class="col-sm-10"&gt;
+                            &lt;input type="text" class="form-control" v-model="sysCompany.addr" placeholder=""/&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                                                                &lt;div class="form-group"&gt;
+                        &lt;div class="col-sm-2 control-label"&gt;&lt;/div&gt;
+                        &lt;div class="col-sm-10"&gt;
+                            &lt;input type="text" class="form-control" v-model="sysCompany.code" placeholder=""/&gt;
+                        &lt;/div&gt;
+                    &lt;/div&gt;
+                                        &lt;div class="form-group"&gt;
+                &lt;div class="col-sm-2 control-label"&gt;&lt;/div&gt;
+                &lt;input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/&gt;
+                &nbsp;&nbsp;&lt;input type="button" class="btn btn-warning" @click="reload" value="返回"/&gt;
+            &lt;/div&gt;
+        &lt;/form&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+&lt;script src="../../js/modules/SysCompany/syscompany.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2>JS</h2>
+<pre><code class="js">
+    $(function () {
+    $("#jqGrid").jqGrid({
+        url: baseURL + 'SysCompany/syscompany/list',
+        datatype: "json",
+        colModel: [
+			{ label: 'id', name: 'id', index: 'id', width: 50, key: true },
+			{ label: '', name: 'addr', index: 'addr', width: 80 },
+			{ label: '', name: 'code', index: 'code', width: 80 }
+        ],
+		viewrecords: true,
+        height: 385,
+        rowNum: 10,
+		rowList : [10,30,50],
+        rownumbers: true,
+        rownumWidth: 25,
+        autowidth:true,
+        multiselect: true,
+        pager: "#jqGridPager",
+        jsonReader : {
+            root: "page.list",
+            page: "page.currPage",
+            total: "page.totalPage",
+            records: "page.totalCount"
+        },
+        prmNames : {
+            page:"page",
+            rows:"limit",
+            order: "order"
+        },
+        gridComplete:function(){
+        	//隐藏grid底部滚动条
+        	$("#jqGrid").closest(".ui-jqgrid-bdiv").css({ "overflow-x" : "hidden" });
+        }
+    });
+});
+
+var vm = new Vue({
+	el:'#rrapp',
+	data:{
+		showList: true,
+		title: null,
+		sysCompany: {}
+	},
+	methods: {
+		query: function () {
+			vm.reload();
+		},
+		add: function(){
+			vm.showList = false;
+			vm.title = "新增";
+			vm.sysCompany = {};
+		},
+		update: function (event) {
+			var id = getSelectedRow();
+			if(id == null){
+				return ;
+			}
+			vm.showList = false;
+            vm.title = "修改";
+
+            vm.getInfo(id)
+		},
+		saveOrUpdate: function (event) {
+			var url = vm.sysCompany.id == null ? "SysCompany/syscompany/save" : "SysCompany/syscompany/update";
+			$.ajax({
+				type: "POST",
+			    url: baseURL + url,
+                contentType: "application/json",
+			    data: JSON.stringify(vm.sysCompany),
+			    success: function(r){
+			    	if(r.code === 0){
+						alert('操作成功', function(index){
+							vm.reload();
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
+		del: function (event) {
+			var ids = getSelectedRows();
+			if(ids == null){
+				return ;
+			}
+
+			confirm('确定要删除选中的记录？', function(){
+				$.ajax({
+					type: "POST",
+				    url: baseURL + "SysCompany/syscompany/delete",
+                    contentType: "application/json",
+				    data: JSON.stringify(ids),
+				    success: function(r){
+						if(r.code == 0){
+							alert('操作成功', function(index){
+								$("#jqGrid").trigger("reloadGrid");
+							});
+						}else{
+							alert(r.msg);
+						}
+					}
+				});
+			});
+		},
+		getInfo: function(id){
+			$.get(baseURL + "SysCompany/syscompany/info/"+id, function(r){
+                vm.sysCompany = r.sysCompany;
+            });
+		},
+		reload: function (event) {
+			vm.showList = true;
+			var page = $("#jqGrid").jqGrid('getGridParam','page');
+			$("#jqGrid").jqGrid('setGridParam',{
+                page:page
+            }).trigger("reloadGrid");
+		}
+	}
+});
+</code></pre>
+
+<h2>JSON</h2>
+<pre><code class="json">
+{
+    "id": "1",
+    "studentNo": "1",
+    "classNo": "1",
+    "soStudentClassNo": "15"
+}
+</code></pre>
+
+<h2>CSS</h2>
+<pre><code class="CSS">
+.hljs-deletion {
+  background-color: #fc9b9b;
+  color: #333;
+}
+
+.hljs-addition {
+  background-color: #a2fca2;
+  color: #333;
+}
+
+.hljs a {
+  color: inherit;
+}
+
+.hljs a:focus,
+.hljs a:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+</code></pre>
+</body>
+<script>
+    Vue.directive('highlight',function (el) {
+        let blocks = el.querySelectorAll('pre code');
+        blocks.forEach((block)=>{
+            hljs.highlightBlock(block)
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lunxian.modules.tCodeTemplateGroup.dao.TCodeTemplateGroupDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lunxian.modules.tCodeTemplateGroup.entity.TCodeTemplateGroupEntity" id="BaseResultMap">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="remarks" column="remarks"/>
+        <result property="crtTime" column="CRT_TIME"/>
+        <result property="mdfTime" column="MDF_TIME"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                    id,
+                    name,
+                    remarks,
+                    CRT_TIME AS crtTime,
+                    MDF_TIME AS mdfTime
+            </sql>
+
+    <select id="queryList" resultType="map">
+        SELECT <include refid="Base_Column_List"/> FROM t_code_template_group
+        <choose>
+            <when test="sidx!=null and sidx!=''">
+                order by ${sidx} ${order}
+            </when>
+            <otherwise>
+                order by MDF_TIME desc
+            </otherwise>
+        </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getDbInfo" resultType="com.lunxian.modules.tCodeTemplateGroup.entity.TCodeTemplateGroupEntity">
+       SELECT  id AS id,name AS name,remarks AS remarks,
+        CRT_TIME AS crtTime,MDF_TIME AS mdfTime
+        FROM t_code_template_group  order by MDF_TIME desc
+    </select>
+
+    <select id="getInfo" resultType="com.lunxian.modules.tCodeTemplateGroup.entity.TCodeTemplateGroupEntity">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_code_template_group WHERE id=#{id}
+    </select>
+
+    <!--新增-->
+    <insert id="save">
+        INSERT into t_code_template_group (name,remarks,CRT_TIME,MDF_TIME)
+        VALUE (#{name},#{remarks},now(),now())
+    </insert>
+
+
+    <delete id="update">
+        UPDATE t_code_template_group
+        SET name=#{name},remarks=#{remarks},
+        MDF_TIME=now() WHERE id=#{id}
+    </delete>
+
+    <delete id="delect">
+        DELETE FROM t_code_template_group WHERE id=#{id}
+    </delete>
+
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from t_code_template_group
+        <if test="name != null and name.trim() != ''">
+            and name like concat('%', #{name}, '%')
+        </if>
+    </select>
+
+</mapper>

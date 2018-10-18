@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>模板</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="plugins/jqgrid/ui.jqgrid-bootstrap.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="libs/jquery.min.js"></script>
+    <script src="plugins/layer/layer.js"></script>
+    <script src="libs/bootstrap.min.js"></script>
+    <script src="libs/vue.min.js"></script>
+    <script src="plugins/jqgrid/grid.locale-cn.js"></script>
+    <script src="plugins/jqgrid/jquery.jqGrid.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="highlight/styles/github.css">
+    <script src="highlight/js/highlight.pack.js"></script>
+
+</head>
+<body>
+<div id="rrapp" v-cloak>
+    <div v-show="showList">
+        <div class="grid-btn">
+            <a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+            <a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+            <a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+        </div>
+        <table id="jqGrid"></table>
+        <div id="jqGridPager"></div>
+    </div>
+
+    <div v-show="!showList" class="panel panel-default">
+        <div class="panel-heading">{{title}}</div>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 control-label">模板名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="tCodeTemplates.name" placeholder="模板名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">模板内容</div>
+                <div class="col-sm-10">
+                    <textarea v-highlight class="code" style="margin: 0px; width: 1000px;height: 600px"
+                              v-model="tCodeTemplates.content" placeholder="模板内容"></textarea>
+                    <!--<input type="text" class="form-control" v-model="tCodeTemplates.content" placeholder="模板内容"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">模板保存名称</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="tCodeTemplates.fileName" placeholder="模板保存名称"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">保存包</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="tCodeTemplates.savaPackage" placeholder="保存包"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">所属模板组</div>
+                <div class="col-sm-10">
+
+                    <select v-model="tCodeTemplates.groupId" class="form-control">
+                        <option v-for="option in options" v-bind:value="option.id">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                    <!--<input type="text" class="form-control" v-model="tCodeTemplates.groupId" placeholder="所属模板组"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">模板类型</div>
+                <div class="col-sm-10">
+                    <select v-model="tCodeTemplates.fileType" class="form-control">
+                        <option value="java" label="java"/>
+                        <option value="xml" label="xml"/>
+                        <option value="html" label="html"/>
+                        <option value="js" label="js"/>
+                        <option value="sql" label="sql"/>
+                    </select>
+                    <!--<input type="text" class="form-control" v-model="tCodeTemplates.fileType" placeholder="模板类型"/>-->
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label">描述</div>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" v-model="tCodeTemplates.remarks" placeholder="描述"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 control-label"></div>
+                <input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+                &nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="js/tcodetemplates.js"></script>
+</body>
+</html>

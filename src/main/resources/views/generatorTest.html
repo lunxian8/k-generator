@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>代码生成预览</title>
+    <meta charset="UTF-8">
+    <script src="libs/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="prism/prism.css">
+    <script src="prism/prism.js"></script>
+</head>
+<body>
+<pre class="line-numbers">
+    <code class="language-java">
+        package com.lunxian.modules.SysCompany.entity;
+
+import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+
+import java.io.Serializable;
+import java.util.Date;
+
+/**
+ * @author wang
+ * @date 2018-05-22 18:02:36
+ */
+@TableName("sys_company")
+public class SysCompanyEntity implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 *
+	 */
+	@TableId
+	private String id;
+	/**
+	 *
+	 */
+	private String addr;
+	/**
+	 *
+	 */
+	private String code;
+
+	/**
+	 * 设置：
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getId() {
+		return id;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setAddr(String addr) {
+		this.addr = addr;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getAddr() {
+		return addr;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setCode(String code) {
+		this.code = code;
+	}
+	/**
+	 * 获取：
+	 */
+	public String getCode() {
+		return code;
+	}
+}
+    </code>
+</pre>
+
+</body>
+</body>
+</html>

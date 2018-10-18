@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lunxian.modules.tCodeDbinfo.dao.TCodeDbinfoDao">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.lunxian.modules.tCodeDbinfo.entity.TCodeDbinfoEntity" id="tCodeDbinfoMap">
+        <result property="id" column="ID"/>
+        <result property="alias" column="ALIAS"/>
+        <result property="dbDriver" column="DB_DRIVER"/>
+        <result property="dbUrl" column="DB_URL"/>
+        <result property="dbUserName" column="DB_USER_NAME"/>
+        <result property="dbPassword" column="DB_PASSWORD"/>
+        <result property="userId" column="USER_ID"/>
+        <result property="dbType" column="DB_TYPE"/>
+        <result property="crtUserId" column="CRT_USER_ID"/>
+        <result property="crtTime" column="CRT_TIME"/>
+        <result property="mdfUserId" column="MDF_USER_ID"/>
+        <result property="mdfTime" column="MDF_TIME"/>
+    </resultMap>
+
+    <select id="queryList" resultType="map">
+        SELECT * FROM t_code_dbinfo
+        <choose>
+        <when test="sidx!=null and sidx!=''">
+            order by ${sidx} ${order}
+        </when>
+        <otherwise>
+            order by MDF_TIME desc
+        </otherwise>
+    </choose>
+        <if test="offset != null and limit != null">
+            limit #{offset}, #{limit}
+        </if>
+    </select>
+
+    <select id="getDbInfo" resultType="com.lunxian.modules.tCodeDbinfo.entity.TCodeDbinfoEntity">
+        SELECT  ID AS id,ALIAS AS alias,DB_DRIVER AS dbDriver,
+        DB_URL AS dbUrl,DB_USER_NAME AS dbUserName,DB_PASSWORD AS dbPassword
+         FROM t_code_dbinfo  order by MDF_TIME desc
+    </select>
+
+    <select id="getInfo" resultType="com.lunxian.modules.tCodeDbinfo.entity.TCodeDbinfoEntity">
+        SELECT  ID AS id,ALIAS AS alias,DB_DRIVER AS dbDriver,
+        DB_URL AS dbUrl,DB_USER_NAME AS dbUserName,DB_PASSWORD AS dbPassword,DB_TYPE AS dbType
+         FROM t_code_dbinfo WHERE ID=#{id}
+    </select>
+
+    <!--新增-->
+    <insert id="save">
+        INSERT into t_code_dbinfo (ALIAS,DB_DRIVER,DB_URL,DB_USER_NAME,DB_PASSWORD,DB_TYPE,CRT_TIME)
+        VALUE (#{alias},'com.mysql.jdbc.Driver',#{dbUrl},#{dbUserName},#{dbPassword},'mysql',now())
+    </insert>
+
+
+    <delete id="update">
+      UPDATE t_code_dbinfo
+      SET ALIAS=#{alias},DB_DRIVER=#{dbDriver},
+      DB_URL=#{dbUrl},DB_USER_NAME=#{dbUserName},
+      DB_PASSWORD=#{dbPassword},MDF_TIME=now() WHERE ID=#{id}
+    </delete>
+
+    <delete id="delect">
+        DELETE FROM t_code_dbinfo WHERE ID=#{id}
+    </delete>
+
+
+    <select id="queryTotal" resultType="int">
+        select count(*) from t_code_dbinfo
+        <if test="alias != null and alias.trim() != ''">
+            and ALIAS like concat('%', #{alias}, '%')
+        </if>
+    </select>
+
+</mapper>
